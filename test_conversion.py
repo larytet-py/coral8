@@ -4,7 +4,7 @@ import time
 
 collected_quotes = {}
 def get_key(base, target):
-    return f"base:target"
+    return f"{base}:{target}"
 
 def quote_listener(base, target, rate):
     collected_quotes[get_key(base, target)] = rate
