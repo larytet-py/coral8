@@ -11,6 +11,8 @@ class QuotesExchangeratesapi():
     https://api.exchangeratesapi.io/latest?base=USD&symbols=ILS
     Expect {"rates":{"ILS":3.300631859},"base":"USD","date":"2021-03-02"}
     check status, parse JSON, return rate
+
+    Class? Who knows,may be I will need an access key or a local cache
     '''
     def __init__(self):
         pass
