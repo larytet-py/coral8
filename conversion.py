@@ -104,6 +104,9 @@ class Quotes():
         return self.rates[key], None
 
 def main():
+    '''
+    Use class Quotes() in the main(). Add get_quote() API which reads the quotes from the CSV
+    '''
     print("Currency converter")
     orders_file = open(sys.argv[1], 'r')
     orders = execute_orders(orders_file)
