@@ -33,14 +33,18 @@ def get_quote(base, target):
     content = response.json()
     rates = content["rates"]
     rate = float(rates[target])
-    return rate
+    return rate, True
 
 def execute_orders(orders_file):
     order_id = 1
     for fields_tuple in csv_file(orders_file):
         base, sum_s, target = fields_tuple
         sum = float(sum_s)
-        rate = get_quote(base, target)
+        rate, ok = get_quote(base, target)
+        if not ok:
+            print(f"{order_id} from {base} to {target} sum {sum} conversion failed")
+            continue
+
         order_amount = rate * sum
         print(f"{order_id} from {base} to {target} sum {sum} rate {rate} total {order_amount}")
         order_id += 1
