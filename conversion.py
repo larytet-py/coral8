@@ -19,37 +19,27 @@ def csv_file(input_file):
             result.append(f)
         yield tuple(result)
 
-def get_quote(base, target):
-    '''
-    Send query like this 
-    https://api.exchangeratesapi.io/latest?base=USD&symbols=ILS
-    Expect {"rates":{"ILS":3.300631859},"base":"USD","date":"2021-03-02"}
-    check status, parse JSON, return rate
-    '''
-    url = f"https://api.exchangeratesapi.io/latest?base={base}&symbols={target}"
-    response = requests.get(url)
-    status_code = response.status_code
-    if response.status_code != HTTPStatus.OK:
-        err = f"Got status {status_code} from {url}"
-        return None, err
-    content = response.json()
-    rates = content["rates"]
-    rate = float(rates[target])
-    return rate, None
+class QuotesExchangeratesapi():
+    def __init__(self):
+        pass
 
-def execute_orders(orders_file):
-    order_id = 0
-    for fields_tuple in csv_file(orders_file):
-        order_id += 1
-        base, sum_s, target = fields_tuple
-        sum = float(sum_s)
-        rate, err = get_quote(base, target)
-        if err != None:
-            print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
-            continue
-
-        order_amount = rate * sum
-        print(f"{order_id}  {sum}{base} to {target}  rate {rate} total {order_amount}{target}")
+    def get_quote(self, base, target):
+        '''
+        Send query like this 
+        https://api.exchangeratesapi.io/latest?base=USD&symbols=ILS
+        Expect {"rates":{"ILS":3.300631859},"base":"USD","date":"2021-03-02"}
+        check status, parse JSON, return rate
+        '''
+        url = f"https://api.exchangeratesapi.io/latest?base={base}&symbols={target}"
+        response = requests.get(url)
+        status_code = response.status_code
+        if response.status_code != HTTPStatus.OK:
+            err = f"Got status {status_code} from {url}"
+            return None, err
+        content = response.json()
+        rates = content["rates"]
+        rate = float(rates[target])
+        return rate, None
 
 class Quotes():
     def __init__(self, get_quote_cb, pairs, polling_time, listeners):
@@ -103,10 +93,34 @@ class Quotes():
 
         return self.rates[key], None
 
+def execute_orders(orders_file):
+    orders_file.seek(0)
+    pairs = []
+    for fields_tuple in csv_file(orders_file):
+        base, _, target = fields_tuple
+        pairs.append((base, target))
+
+    quotes = Quotes(QuotesExchangeratesapi().get_quote, pairs, 1.0, [])
+    # I wait for the first loop to complete
+    quotes.close() 
+
+    order_id = 0
+    orders_file.seek(0)
+    for fields_tuple in csv_file(orders_file):
+        order_id += 1
+        base, sum_s, target = fields_tuple
+        sum = float(sum_s)
+        # quotes is closed, but I canm stil access the collected data!
+        rate, err = quotes.quote(base, target)  
+        if err != None:
+            print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
+            continue
+
+        order_amount = rate * sum
+        print(f"{order_id}  {sum}{base} to {target}  rate {rate} total {order_amount}{target}")
+
+
 def main():
-    '''
-    TODO Use class Quotes() in the main(). Add get_quote() API which reads the quotes from the CSV
-    '''
     print("Currency converter")
     orders_file = open(sys.argv[1], 'r')
     orders = execute_orders(orders_file)

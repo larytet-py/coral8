@@ -9,7 +9,7 @@ def get_key(base, target):
 def quote_listener(base, target, rate):
     collected_quotes[get_key(base, target)] = rate
 
-class quotesMock():
+class QuotesMock():
     def __init__(self, quotes):
         self.quotes = quotes
         self.quote_idx = 0
@@ -21,7 +21,7 @@ class quotesMock():
 
 def test_quotes_async():
     mock_data = [(0.3, None), (0.5, None), (0.3, None), (0.5, None)]
-    quotes_mock = quotesMock(mock_data)
+    quotes_mock = QuotesMock(mock_data)
     polling_time = 1.0
     pairs = [("USD","ILS"), ("USD", "GBP")]
     quotes = conversion.Quotes(quotes_mock.get_quote, pairs, polling_time, [quote_listener])
@@ -37,7 +37,7 @@ def test_quotes_async():
 
 def test_quotes_sync():
     mock_data = [(0.3, None), (0.3, None)]
-    quotes_mock = quotesMock(mock_data)
+    quotes_mock = QuotesMock(mock_data)
     pairs = [("USD","ILS")]
     polling_time = 1.0
     quotes = conversion.Quotes(quotes_mock.get_quote, pairs, polling_time, [quote_listener])

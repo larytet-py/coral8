@@ -47,4 +47,3 @@ def test_quotes_async():
 
 ## TODO
 
-Use class Quotes() in the main(). Add get_quote() API which reads the quotes from the CSV
