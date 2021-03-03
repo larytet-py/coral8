@@ -52,6 +52,7 @@ class Quotes():
     def refresh_quotes(self):
         for base, target in self.pairs:
             key = self.key(base, target)
+            # Skip a pair which caused errors before
             if key in self.bad_pairs:
                 continue
             rate, err = self.get_quote(base, target)
