@@ -22,9 +22,8 @@ class QuotesMock():
 def test_quotes_async():
     mock_data = [(0.3, None), (0.5, None), (0.3, None), (0.5, None)]
     quotes_mock = QuotesMock(mock_data)
-    polling_time = 1.0
     pairs = [("USD","ILS"), ("USD", "GBP")]
-    quotes = conversion.Quotes(quotes_mock.get_quote, pairs, polling_time, [quote_listener])
+    quotes = conversion.Quotes(quotes_mock.get_quote, pairs, 1.0, [quote_listener])
     quotes.close()
     idx = 0
     for base, target in pairs:
@@ -38,8 +37,7 @@ def test_quotes_sync():
     mock_data = [(0.3, None), (0.3, None)]
     quotes_mock = QuotesMock(mock_data)
     pairs = [("USD","ILS")]
-    polling_time = 1.0
-    quotes = conversion.Quotes(quotes_mock.get_quote, pairs, polling_time, [quote_listener])
+    quotes = conversion.Quotes(quotes_mock.get_quote, pairs, 1.0, [])
     quotes.close()
     rate, err = quotes.quote("USD", "ILS")
     assert err == None, f"Error is not None {err}"    
