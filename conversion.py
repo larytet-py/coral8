@@ -102,7 +102,7 @@ def execute_orders(orders_file):
 
     # Load the rates for the pairs I need
     quotes = Quotes(QuotesExchangeratesapi().get_quote, pairs, 1.0, [])
-    # I wait for the first loop to complete
+    # I wait for the first loop to complete! What a hack!
     quotes.close() 
 
     order_id = 0
