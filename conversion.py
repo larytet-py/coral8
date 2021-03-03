@@ -36,19 +36,18 @@ def get_quote(base, target):
     return rate, None
 
 def execute_orders(orders_file):
-    order_id = 1
+    order_id = 0
     for fields_tuple in csv_file(orders_file):
+        order_id += 1
         base, sum_s, target = fields_tuple
         sum = float(sum_s)
         rate, err = get_quote(base, target)
         if err != None:
-            order_id += 1
             print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
             continue
 
         order_amount = rate * sum
         print(f"{order_id}  {sum}{base} to {target}  rate {rate} total {order_amount}{target}")
-        order_id += 1
 
 def main():
     print("Currency converter")
