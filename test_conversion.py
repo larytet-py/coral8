@@ -53,6 +53,7 @@ def test_quotes_sync():
 
 
 def test_quotes_sync_error():
+    # I expect the conversion.Quotes to query a bad pair only once
     mock_data = [(0.3, "error")]
     quotes_mock = QuotesMock(mock_data)
     pairs = [("BOB","ILS")]
