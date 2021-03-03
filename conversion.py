@@ -89,14 +89,16 @@ def csv_file(input_file):
         yield row
 
 def execute_orders(orders_file):
+    # Read the pairs I need
     orders_file.seek(0)
     pairs = []
     for row in csv_file(orders_file):
         base, target = row["Base"], row["Target"]
         pairs.append((base, target))
 
-    quotes = Quotes(QuotesExchangeratesapi().get_quote, pairs, 1.0, [])
+    # Load the rates for the pairs I need
     # I wait for the first loop to complete
+    quotes = Quotes(QuotesExchangeratesapi().get_quote, pairs, 1.0, [])
     quotes.close() 
 
     order_id = 0
@@ -104,7 +106,7 @@ def execute_orders(orders_file):
     for row in csv_file(orders_file):
         order_id += 1
         base, target, sum = row["Base"], row["Target"], float(row["Sum"])
-        # quotes is closed, but I canm stil access the collected data!
+        # quotes is closed, but I can stil access the collected data!
         rate, err = quotes.quote(base, target)  
         if err != None:
             print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
