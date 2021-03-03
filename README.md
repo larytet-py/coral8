@@ -1,5 +1,11 @@
 
 
+Usage
+
+```
+python3 conversion.py  currency-conversion.cs
+```
+
 Example of output 
 
 ```
