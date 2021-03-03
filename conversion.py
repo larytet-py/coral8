@@ -42,6 +42,7 @@ def execute_orders(orders_file):
         sum = float(sum_s)
         rate, err = get_quote(base, target)
         if err != None:
+            order_id += 1
             print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
             continue
 
