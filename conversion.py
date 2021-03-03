@@ -1,3 +1,4 @@
+import sys
 import requests
 
 def csv_file(input_file):
@@ -44,6 +45,10 @@ def execute_orders(orders_file):
         order_id += 1
 
 def main():
+    print("Hello")
     orders_file = open(sys.argv[1], 'r')
     orders = execute_orders(orders_file)
     orders_file.close()
+
+if __name__ == "__main__":
+    main()
