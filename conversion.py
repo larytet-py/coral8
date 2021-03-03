@@ -28,21 +28,21 @@ def get_quote(base, target):
     response = requests.get(url)
     status_code = response.status_code
     if response.status_code != HTTPStatus.OK:
-        print(f"Got status {status_code} from {url}")
-        return None, False
+        err = f"Got status {status_code} from {url}"
+        return None, err
     content = response.json()
     rates = content["rates"]
     rate = float(rates[target])
-    return rate, True
+    return rate, None
 
 def execute_orders(orders_file):
     order_id = 1
     for fields_tuple in csv_file(orders_file):
         base, sum_s, target = fields_tuple
         sum = float(sum_s)
-        rate, ok = get_quote(base, target)
-        if not ok:
-            print(f"{order_id} from {base} to {target} sum {sum} conversion failed")
+        rate, err = get_quote(base, target)
+        if err != None:
+            print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
             continue
 
         order_amount = rate * sum
