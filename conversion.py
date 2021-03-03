@@ -5,15 +5,6 @@ import threading
 import time
 import csv
 
-def csv_file(input_file):
-    '''
-    read the file, yield fields of the CSV
-    Use pandas?
-    '''
-    csvreader = csv.DictReader(input_file)
-    for row in csvreader:
-        yield row
-
 class QuotesExchangeratesapi():
     def __init__(self):
         pass
@@ -87,6 +78,15 @@ class Quotes():
             return None, f"No match for the pair {base}:{target}"
 
         return self.rates[key], None
+
+def csv_file(input_file):
+    '''
+    read the file, yield fields of the CSV
+    Use pandas?
+    '''
+    csvreader = csv.DictReader(input_file)
+    for row in csvreader:
+        yield row
 
 def execute_orders(orders_file):
     orders_file.seek(0)
