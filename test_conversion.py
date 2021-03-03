@@ -60,5 +60,4 @@ def test_quotes_sync_error():
     quotes = conversion.Quotes(quotes_mock.get_quote, pairs, 1.0, [])
     quotes.close()
     rate, err = quotes.quote("BOB", "ILS")
-    assert err != None, f"Error is None"    
-
+    assert err != None, f"Error is None"

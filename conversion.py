@@ -120,6 +120,8 @@ def execute_orders(orders_file):
         order_id += 1
         base, target, sum = row["Base"], row["Target"], float(row["Sum"])
         # quotes is closed, but I can stil access the collected data!
+        # I could call QuotesExchangeratesapi().get_quote(), but I use class Quotes()
+        # because I can
         rate, err = quotes.quote(base, target)  
         if err != None:
             print(f"{order_id} from {base} to {target} sum {sum} conversion failed {err}")
