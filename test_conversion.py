@@ -10,6 +10,10 @@ def quote_listener(base, target, rate):
     collected_quotes[get_key(base, target)] = rate
 
 class QuotesMock():
+    '''
+    Serve quotes in a specific order
+    I do not care about the actual pair
+    '''
     def __init__(self, quotes):
         self.quotes = quotes
         self.quote_idx = 0
@@ -46,4 +50,14 @@ def test_quotes_sync():
     assert rate == expected_rate, f"Actual {rate} expected {expected_rate}"
     rate, err = quotes.quote("GBP", "ILS")
     assert err != None, f"Error is None {err}"
+
+
+def test_quotes_sync_error():
+    mock_data = [(0.3, "error")]
+    quotes_mock = QuotesMock(mock_data)
+    pairs = [("BOB","ILS")]
+    quotes = conversion.Quotes(quotes_mock.get_quote, pairs, 1.0, [])
+    quotes.close()
+    rate, err = quotes.quote("BOB", "ILS")
+    assert err != None, f"Error is None"    
 
