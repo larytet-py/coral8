@@ -60,17 +60,17 @@ class Quotes():
         '''
         self.pairs, self.polling_time = pairs, polling_time
         self.listeners = listeners
+        self.exit_flag = False
         self.rates = {}
         self.job = threading.Thread(target=self.poll_quotes)
         self.job.start()
-        self.exit_flag = False
     
     def key(self, base, target):
         return f"{base}:{target}"
 
     def poll_quotes(self):
         new_data = []
-        while True:
+        while not self.exit_flag:
             for base, target in self.pairs:
                 rate, err = get_quote(base, target)
                 if err != None:
@@ -81,8 +81,6 @@ class Quotes():
                 if (not key in self.rates) or (self.rates[key] != rate):
                     self.call_listeners(base, target, rate)
                 self.rates[key] = rate
-            if self.exit_flag:
-                break
             # Cutting corners: I need a ticker here to avoid drift
             time.sleep(self.polling_time)
 
