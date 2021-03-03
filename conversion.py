@@ -77,6 +77,7 @@ class Quotes():
             if (not key in self.rates) or (self.rates[key] != rate):
                 self.__call_listeners(base, target, rate)
             self.rates[key] = rate
+            # Cutting corners: I need a ticker here to avoid drift
             time.sleep(self.polling_time)
             if self.exit_flag:
                 break
@@ -87,6 +88,7 @@ class Quotes():
 
     def call_listeners(self, base, target, rate):
         for listener in self.listeners:
+            # Cutting corners: I assume listener is a non-blocking function
             listener(base, target, rate)
 
     def quote(base, target):
