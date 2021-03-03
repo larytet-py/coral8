@@ -51,6 +51,11 @@ def execute_orders(orders_file):
 
 class Quotes():
     def __init__(self, pairs, polling_time, listeners):
+        '''
+        pairs: [("USD","ILS"), ("USD", "GBP")]
+        polling_time (seconds): 6.0
+        listeners [function(base, target, rate) - called asynchronously 
+        '''
         self.pairs, self.polling_time = pairs, polling_time
         self.listeners = listeners
         self.rates = {}
