@@ -41,25 +41,30 @@ class Quotes():
         self.listeners, self.get_quote = listeners, get_quote_cb
         self.exit_flag = False
         self.rates = {}
+        # I can ensure that all reuired pairs are available after init
+        # self.refresh_quotes()
         self.job = threading.Thread(target=self.poll_quotes)
         self.job.start()
     
     def key(self, base, target):
         return f"{base}:{target}"
 
+    def refresh_quotes(self):
+        for base, target in self.pairs:
+            rate, err = self.get_quote(base, target)
+            if err != None:
+                print(f"Failed to get a quote for {base}/{target}:{err}")
+                continue
+            key = self.key(base, target)
+            #print(f"Got quote {base} {target} {rate}")
+            if (not key in self.rates) or (self.rates[key] != rate):
+                self.call_listeners(base, target, rate)
+            self.rates[key] = rate
+
     def poll_quotes(self):
         new_data = []
         while not self.exit_flag:
-            for base, target in self.pairs:
-                rate, err = self.get_quote(base, target)
-                if err != None:
-                    print(f"Failed to get a quote for {base}/{target}:{err}")
-                    continue
-                key = self.key(base, target)
-                #print(f"Got quote {base} {target} {rate}")
-                if (not key in self.rates) or (self.rates[key] != rate):
-                    self.call_listeners(base, target, rate)
-                self.rates[key] = rate
+            self.refresh_quotes()
             # Cutting corners: I need a ticker here to avoid drift
             time.sleep(self.polling_time)
 
