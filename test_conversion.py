@@ -11,7 +11,7 @@ def quote_listener(base, target, rate):
 
 class QuotesMock():
     '''
-    Serve quotes in a specific order
+    Serve quotes in a given order
     I do not care about the actual pair
     '''
     def __init__(self, quotes):
