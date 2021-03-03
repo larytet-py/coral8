@@ -6,16 +6,16 @@ import time
 import csv
 
 class QuotesExchangeratesapi():
+    '''
+    Send query like this 
+    https://api.exchangeratesapi.io/latest?base=USD&symbols=ILS
+    Expect {"rates":{"ILS":3.300631859},"base":"USD","date":"2021-03-02"}
+    check status, parse JSON, return rate
+    '''
     def __init__(self):
         pass
 
     def get_quote(self, base, target):
-        '''
-        Send query like this 
-        https://api.exchangeratesapi.io/latest?base=USD&symbols=ILS
-        Expect {"rates":{"ILS":3.300631859},"base":"USD","date":"2021-03-02"}
-        check status, parse JSON, return rate
-        '''
         url = f"https://api.exchangeratesapi.io/latest?base={base}&symbols={target}"
         response = requests.get(url)
         status_code = response.status_code
