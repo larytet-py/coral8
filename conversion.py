@@ -52,14 +52,17 @@ def execute_orders(orders_file):
         print(f"{order_id}  {sum}{base} to {target}  rate {rate} total {order_amount}{target}")
 
 class Quotes():
-    def __init__(self, pairs, polling_time, listeners):
+    def __init__(self, get_quote_cb, pairs, polling_time, listeners):
         '''
+        get_quote_cb is a function(base, target) returning a quote, can be None
         pairs: [("USD","ILS"), ("USD", "GBP")]
         polling_time (seconds): 6.0
         listeners [function(base, target, rate) - called asynchronously 
         '''
+        if get_quote_cb is None:
+            get_quote_cb = get_quote
         self.pairs, self.polling_time = pairs, polling_time
-        self.listeners = listeners
+        self.listeners, self.get_quote = listeners, get_quote_cb
         self.exit_flag = False
         self.rates = {}
         self.job = threading.Thread(target=self.poll_quotes)
@@ -72,7 +75,7 @@ class Quotes():
         new_data = []
         while not self.exit_flag:
             for base, target in self.pairs:
-                rate, err = get_quote(base, target)
+                rate, err = self.get_quote(base, target)
                 if err != None:
                     print(f"Failed to get a quote for {base}/{target}:{err}")
                     continue
@@ -108,6 +111,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
