@@ -23,16 +23,20 @@ def get_quote(base, target):
     check status, parse JSON, return rate
     '''
     url = f"https://api.exchangeratesapi.io/latest?base={base}&symbols={target}"
-    r =requests.get(url)
-    status_code = r.status_code
-    if r.status_code != HTTPStatus.OK:
+    response = requests.get(url)
+    status_code = response.status_code
+    if response.status_code != HTTPStatus.OK:
         print(f"Got status {status_code} from {url}")
         return None, False
+    content = response.json()
+    rates = content["rates"]
+    rate = float(rates[target])
+    return rate
 
 def execute_commands(commands_file):
     for fields_tuple in csv_file(commands_file):
         base, sum_s, target = fields_tuple
-        sum = int(sum_s)
+        sum = float(sum_s)
 
 def main():
     commands_file = open(sys.argv[1], 'r')
