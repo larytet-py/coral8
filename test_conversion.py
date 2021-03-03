@@ -30,7 +30,8 @@ def test_quotes_async():
         key = get_key(base, target)
         assert key in collected_quotes, f"Key {key} is missing in quotes"
         rate = collected_quotes[key]
-        assert rate == mock_data[idx][0], f"Actual {rate} expected {mock_data[idx][0]}"
+        expected_rate = mock_data[idx][0]
+        assert rate == expected_rate, f"Actual {rate} expected {expected_rate}"
         idx += 1
 
 def test_quotes_sync():
@@ -41,7 +42,8 @@ def test_quotes_sync():
     quotes.close()
     rate, err = quotes.quote("USD", "ILS")
     assert err == None, f"Error is not None {err}"    
-    assert rate == 0.3, f"Actual {rate} expected {mock_data[0][0]}"
+    expected_rate = mock_data[0][0]
+    assert rate == expected_rate, f"Actual {rate} expected {expected_rate}"
     rate, err = quotes.quote("GBP", "ILS")
     assert err != None, f"Error is None {err}"
 
