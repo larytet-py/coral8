@@ -70,20 +70,21 @@ class Quotes():
 
     def poll_quotes(self):
         new_data = []
-        for base, target in self.pairs:
-            rate, err = get_quote(base, target)
-            if err != None:
-                print(f"Failed to get a quote for {base}/{target}:{err}")
-                continue
-            key = self.key(base, target)
-            print(f"Got quote {base} {target} {rate}")
-            if (not key in self.rates) or (self.rates[key] != rate):
-                self.call_listeners(base, target, rate)
-            self.rates[key] = rate
+        while True:
+            for base, target in self.pairs:
+                rate, err = get_quote(base, target)
+                if err != None:
+                    print(f"Failed to get a quote for {base}/{target}:{err}")
+                    continue
+                key = self.key(base, target)
+                print(f"Got quote {base} {target} {rate}")
+                if (not key in self.rates) or (self.rates[key] != rate):
+                    self.call_listeners(base, target, rate)
+                self.rates[key] = rate
             if self.exit_flag:
                 break
-        # Cutting corners: I need a ticker here to avoid drift
-        time.sleep(self.polling_time)
+            # Cutting corners: I need a ticker here to avoid drift
+            time.sleep(self.polling_time)
 
     def close(self):
         self.exit_flag = True
