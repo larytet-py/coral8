@@ -54,13 +54,14 @@ class Quotes():
         self.pairs, self.polling_time = pairs, polling_time
         self.listeners = listeners
         self.rates = {}
-        self.job = threading.Thread(target=self.__poll_quotes)
+        self.job = threading.Thread(target=self.poll_quotes)
         self.job.start()
+        self.exit_flag = False
     
-    def __key(base, target):
+    def key(base, target):
         return f"{base}:{target}"
 
-    def __poll_quotes(self):
+    def poll_quotes(self):
         new_data = []
         for base, target in pairs:
             rate, err = get_quote(base, target)
@@ -72,8 +73,14 @@ class Quotes():
                 self.__call_listeners(base, target, rate)
             self.rates[key] = rate
             time.sleep(self.polling_time)
+            if self.exit_flag:
+                break
 
-    def __call_listeners(self, base, target, rate):
+    def close(self):
+        self.exit_flag = True
+        self.job.join()
+
+    def call_listeners(self, base, target, rate):
         for listener in self.listeners:
             listener(base, target, rate)
 
