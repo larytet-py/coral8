@@ -10,9 +10,10 @@ def quote_listener(base, target, rate):
     collected_quotes[get_key(base, target)] = rate
 
 def test_quotes_async():
+    polling_time = 1.0
     pairs = [("USD","ILS"), ("USD", "GBP")]
-    quotes = conversion.Quotes(pairs, 6.0, [quote_listener])
-    time.sleep(6.1)
+    quotes = conversion.Quotes(pairs, polling_time, [quote_listener])
+    time.sleep(polling_time + 1.0)
     for base, target in pairs:
         key = get_key(base, target)
         assert key in collected_quotes, f"Key {key} is missing in quotes"
