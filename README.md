@@ -10,7 +10,12 @@ pytest  --capture=no --verbose --maxfail=1 .
 API
 
 ```Python
+
+
 def quote_listener(base, target, rate):
+    '''
+    Asynchronous callback
+    '''
     # do my stuff
     pass
 
