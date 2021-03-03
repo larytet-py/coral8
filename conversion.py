@@ -88,13 +88,17 @@ def csv_file(input_file):
     for row in csvreader:
         yield row
 
-def execute_orders(orders_file):
-    # Read the pairs I need
+def get_pairs(orders_file):
     orders_file.seek(0)
     pairs = []
     for row in csv_file(orders_file):
         base, target = row["Base"], row["Target"]
         pairs.append((base, target))
+    return pairs
+
+def execute_orders(orders_file):
+    # Read the pairs I need
+    pairs = get_pairs(orders_file)
 
     # Load the rates for the pairs I need
     # I wait for the first loop to complete
