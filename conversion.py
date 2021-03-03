@@ -94,8 +94,8 @@ class Quotes():
             # Cutting corners: I assume listener is a non-blocking function
             listener(base, target, rate)
 
-    def quote(base, target):
-        key = self.__key(base, target)
+    def quote(self, base, target):
+        key = self.key(base, target)
         if not key in self.rates:
             return None, f"No match for the pair {base}:{target}"
 
