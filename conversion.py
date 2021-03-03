@@ -3,21 +3,16 @@ import requests
 from http import HTTPStatus
 import threading
 import time
+import csv
 
 def csv_file(input_file):
     '''
     read the file, yield fields of the CSV
     Use pandas?
     '''
-
-    input_file.readline()  # skip the first line
-    for line in input_file:
-        fields = line.split(",")
-        result = []
-        for f in fields:
-            f = f.strip()
-            result.append(f)
-        yield tuple(result)
+    csvreader = csv.DictReader(input_file)
+    for row in csvreader:
+        yield row
 
 class QuotesExchangeratesapi():
     def __init__(self):
@@ -70,7 +65,7 @@ class Quotes():
                     print(f"Failed to get a quote for {base}/{target}:{err}")
                     continue
                 key = self.key(base, target)
-                print(f"Got quote {base} {target} {rate}")
+                #print(f"Got quote {base} {target} {rate}")
                 if (not key in self.rates) or (self.rates[key] != rate):
                     self.call_listeners(base, target, rate)
                 self.rates[key] = rate
@@ -96,8 +91,8 @@ class Quotes():
 def execute_orders(orders_file):
     orders_file.seek(0)
     pairs = []
-    for fields_tuple in csv_file(orders_file):
-        base, _, target = fields_tuple
+    for row in csv_file(orders_file):
+        base, target = row["Base"], row["Target"]
         pairs.append((base, target))
 
     quotes = Quotes(QuotesExchangeratesapi().get_quote, pairs, 1.0, [])
@@ -106,10 +101,9 @@ def execute_orders(orders_file):
 
     order_id = 0
     orders_file.seek(0)
-    for fields_tuple in csv_file(orders_file):
+    for row in csv_file(orders_file):
         order_id += 1
-        base, sum_s, target = fields_tuple
-        sum = float(sum_s)
+        base, target, sum = row["Base"], row["Target"], float(row["Sum"])
         # quotes is closed, but I canm stil access the collected data!
         rate, err = quotes.quote(base, target)  
         if err != None:
