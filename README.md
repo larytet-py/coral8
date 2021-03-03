@@ -36,7 +36,7 @@ def quote_listener(base, target, rate):
 def test_quotes_async():
     polling_time = 1.0
     pairs = [("USD","ILS"), ("USD", "GBP")]
-    quotes = conversion.Quotes(pairs, polling_time, [quote_listener])
+    quotes = conversion.Quotes(None, pairs, polling_time, [quote_listener])
     # Block forever ?
     quotes.close()
 
