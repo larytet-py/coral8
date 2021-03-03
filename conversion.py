@@ -40,19 +40,22 @@ class Quotes():
         self.pairs, self.polling_time = pairs, polling_time
         self.listeners, self.get_quote = listeners, get_quote_cb
         self.exit_flag = False
-        self.rates = {}
-        # I can ensure that all reuired pairs are available after init
-        # self.refresh_quotes()
+        self.rates, self.unknown_pairs = {}, []
+        # I can ensure that all required pairs are available after init
+        self.refresh_quotes()
         self.job = threading.Thread(target=self.poll_quotes)
         self.job.start()
     
     def key(self, base, target):
-        return f"{base}:{target}"
+        return (base, target)
 
     def refresh_quotes(self):
         for base, target in self.pairs:
+            if (base, target) in self.unknown_pairs:
+                continue
             rate, err = self.get_quote(base, target)
             if err != None:
+                self.unknown_pairs.append((base, target))
                 print(f"Failed to get a quote for {base}/{target}:{err}")
                 continue
             key = self.key(base, target)

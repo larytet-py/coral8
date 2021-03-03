@@ -4,7 +4,7 @@ import time
 
 collected_quotes = {}
 def get_key(base, target):
-    return f"{base}:{target}"
+    return (base, target)
 
 def quote_listener(base, target, rate):
     collected_quotes[get_key(base, target)] = rate
@@ -25,7 +25,7 @@ def test_quotes_async():
     polling_time = 1.0
     pairs = [("USD","ILS"), ("USD", "GBP")]
     quotes = conversion.Quotes(quotes_mock.get_quote, pairs, polling_time, [quote_listener])
-    time.sleep(polling_time + 0.1)
+    quotes.close()
     idx = 0
     for base, target in pairs:
         key = get_key(base, target)
@@ -33,7 +33,6 @@ def test_quotes_async():
         rate = collected_quotes[key]
         assert rate == mock_data[idx][0], f"Actual {rate} expected {mock_data[idx][0]}"
         idx += 1
-    quotes.close()
 
 def test_quotes_sync():
     mock_data = [(0.3, None), (0.3, None)]
@@ -41,11 +40,10 @@ def test_quotes_sync():
     pairs = [("USD","ILS")]
     polling_time = 1.0
     quotes = conversion.Quotes(quotes_mock.get_quote, pairs, polling_time, [quote_listener])
-    time.sleep(0.2)
+    quotes.close()
     rate, err = quotes.quote("USD", "ILS")
     assert err == None, f"Error is not None {err}"    
     assert rate == 0.3, f"Actual {rate} expected {mock_data[0][0]}"
     rate, err = quotes.quote("GBP", "ILS")
     assert err != None, f"Error is None {err}"
-    quotes.close()
 
