@@ -5,7 +5,25 @@ Usage
 ```sh
 python3 conversion.py  currency-conversion.cs
 pytest  --capture=no --verbose --maxfail=1 .
+```
 
+API
+
+```Python
+def quote_listener(base, target, rate):
+    # do my stuff
+    pass
+
+def test_quotes_async():
+    polling_time = 1.0
+    pairs = [("USD","ILS"), ("USD", "GBP")]
+    quotes = conversion.Quotes(pairs, polling_time, [quote_listener])
+    # Block forever ?
+    quotes.close()
+
+    # Quote synchronously
+    rate, _ = quotes.quote("USD", "ILS")
+    print(rate)
 ```
 
 Example of output 
