@@ -46,7 +46,7 @@ def execute_orders(orders_file):
             continue
 
         order_amount = rate * sum
-        print(f"{order_id} from {base} to {target} sum {sum} rate {rate} total {order_amount}")
+        print(f"{order_id}  {sum}{base} to {target}  rate {rate} total {order_amount}{target}")
         order_id += 1
 
 def main():
