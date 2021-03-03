@@ -2,13 +2,13 @@
 
 Usage
 
-```
+```sh
 python3 conversion.py  currency-conversion.cs
 ```
 
 Example of output 
 
-```
+```sh
 Currency converter
 1  100.0ILS to USD  rate 0.3029722922 total 30.29722922USD
 2  150.0USD to GBP  rate 0.7185982707 total 107.789740605GBP
