@@ -33,12 +33,17 @@ def get_quote(base, target):
     rate = float(rates[target])
     return rate
 
-def execute_commands(commands_file):
-    for fields_tuple in csv_file(commands_file):
+def execute_orders(orders_file):
+    order_id = 1
+    for fields_tuple in csv_file(orders_file):
         base, sum_s, target = fields_tuple
         sum = float(sum_s)
+        rate = get_quote(base, target)
+        order_amount = rate * sum
+        print(f"{order_id} from {base} to {target} rate {rate} total {order_amount}")
+        order_id += 1
 
 def main():
-    commands_file = open(sys.argv[1], 'r')
-    commands = execute_commands(commands_file)
-    commands_file.close()
+    orders_file = open(sys.argv[1], 'r')
+    orders = execute_orders(orders_file)
+    orders_file.close()
