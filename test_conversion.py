@@ -2,12 +2,12 @@ import pytest
 import conversion
 import time
 
-quotes = {}
+collected_quotes = {}
 def get_key(base, target):
     return f"base:target"
 
 def quote_listener(base, target, rate):
-    quotes[get_key(base, target)] = rate
+    collected_quotes[get_key(base, target)] = rate
 
 def test_quotes_async():
     pairs = [("USD","ILS"), ("USD", "GBP")]
@@ -15,7 +15,7 @@ def test_quotes_async():
     time.sleep(6.1)
     for base, target in pairs:
         key = get_key(base, target)
-        assert key in quotes, f"Key {key} is missing in quotes"
+        assert key in collected_quotes, f"Key {key} is missing in quotes"
     quotes.close()
 
 def test_quotes_sync():
