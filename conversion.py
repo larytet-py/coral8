@@ -1,5 +1,6 @@
 import sys
 import requests
+from http import HTTPStatus
 
 def csv_file(input_file):
     '''
