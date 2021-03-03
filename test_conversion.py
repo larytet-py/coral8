@@ -1,5 +1,6 @@
 import pytest
 import conversion
+import time
 
 quotes = {}
 def get_key(base, target):
@@ -10,7 +11,7 @@ def quote_listener(base, target, rate):
 
 def test_quotes_async():
     pairs = [("USD","ILS"), ("USD", "GBP")]
-    quotes = Quotes(pairs, 6.0, [quote_listener])
+    quotes = conversion.Quotes(pairs, 6.0, [quote_listener])
     time.sleep(6.1)
     for base, target in pairs:
         key = get_key(base, target)
@@ -19,7 +20,7 @@ def test_quotes_async():
 
 def test_quotes_sync():
     pairs = [("USD","ILS")]
-    quotes = Quotes(pairs, 6.0, [quote_listener])
+    quotes = conversion.Quotes(pairs, 6.0, [quote_listener])
     time.sleep(1.0)
     rate, err = quotes.quote("USD", "ILS")
     assert err == None, f"Error is not None {err}"    

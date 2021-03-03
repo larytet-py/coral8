@@ -1,6 +1,8 @@
 import sys
 import requests
 from http import HTTPStatus
+import threading
+import time
 
 def csv_file(input_file):
     '''
