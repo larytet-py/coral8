@@ -42,11 +42,11 @@ def execute_orders(orders_file):
         sum = float(sum_s)
         rate = get_quote(base, target)
         order_amount = rate * sum
-        print(f"{order_id} from {base} to {target} rate {rate} total {order_amount}")
+        print(f"{order_id} from {base} to {target} sum {sum} rate {rate} total {order_amount}")
         order_id += 1
 
 def main():
-    print("Hello")
+    print("Currency converter")
     orders_file = open(sys.argv[1], 'r')
     orders = execute_orders(orders_file)
     orders_file.close()
