@@ -49,6 +49,41 @@ def execute_orders(orders_file):
         order_amount = rate * sum
         print(f"{order_id}  {sum}{base} to {target}  rate {rate} total {order_amount}{target}")
 
+class Quotes():
+    def __init__(self, pairs, polling_time, listeners):
+        self.pairs, self.polling_time = pairs, polling_time
+        self.listeners = listeners
+        self.rates = {}
+        self.job = threading.Thread(target=self.__poll_quotes)
+        self.job.start()
+    
+    def __key(base, target):
+        return f"{base}:{target}"
+
+    def __poll_quotes(self):
+        new_data = []
+        for base, target in pairs:
+            rate, err = get_quote(base, target)
+            if err != None:
+                print(f"Failed to get a quote for {base}/{target}:{err}")
+                continue
+            key = self.__key(base, target)
+            if (not key in self.rates) or (self.rates[key] != rate):
+                self.__call_listeners(base, target, rate)
+            self.rates[key] = rate
+            time.sleep(self.polling_time)
+
+    def __call_listeners(self, base, target, rate):
+        for listener in self.listeners:
+            listener(base, target, rate)
+
+    def quote(base, target):
+        key = self.__key(base, target)
+        if not key in self.rates:
+            return None, f"No match for the pair {base}:{target}"
+
+        return self.rates[key], None
+
 def main():
     print("Currency converter")
     orders_file = open(sys.argv[1], 'r')
