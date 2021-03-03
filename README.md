@@ -4,7 +4,7 @@ Usage
 
 ```sh
 python3 conversion.py  currency-conversion.cs
-pytest --benchmark-disable --capture=no --verbose --maxfail=1 .
+pytest  --capture=no --verbose --maxfail=1 .
 
 ```
 
